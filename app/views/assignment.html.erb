@@ -1,0 +1,81 @@
+
+1) find queen albums:
+Album.where(find_by(name: Queen)
+
+2)count tracks thats belong to media type "Protected MPEG-4 video file":
+
+Track.where(media_type_id: MediaType.find_by(name: "Protected MPEG-4 video file")).count
+
+3) Find hiphop genre:
+
+Genre.find_by(name: "Hip Hop/Rap")
+
+4) Count tracks in hiphop:
+
+hiphop = Genre.find_by(name: "Hip Hop/Rap")
+Track.where(genre_id: hiphop.id)
+
+5) total time for all tracks in library
+
+Track.sum(:milliseconds) / 3600000
+
+6) find most expensive track with media type "MPEG audio file":
+
+mediatype = MediaType.find_by(name: "MPEG audio file")
+Track.where(track_id: mediatype.id).maximum(:unit_price).to_f
+
+
+7) find name of most expensive track with media type "MPEG audio file"
+
+mediatype = MediaType.find_by(name: "MPEG audio file")
+Track.where(track_id: mediatype.id).order(unit_price: :desc).first
+
+8) find 2 oldest artists:
+
+Artist.order(:created_at).limit(2)
+
+9) find least expensive track in electronica/dance:
+
+electronica_dance = Genre.find_by(name: "Electronica/Dance")
+
+Track.where(track_id: electronica_dance.id).order(unit_price: :asc).first
+
+10) find all "MPEG audio file" tracks in electronica/dance:
+
+electronica_dance = Genre.find_by(name: "Electronica/Dance"
+media_type = MediaType.find_by(media_type_id: "MPEG audio file")
+Track.where(genre_id: electronica_dance.id, media_type_id: media_type.id)
+
+
+
+
+
+
+
+
+
+
+
+
+SQL Queries
+
+1) find all queen albums:
+
+SELECT * FROM albums WHERE artist_id IN (SELECT id FROM artists WHERE name = "Queen");
+
+
+2) count "Protected MPEG-4 video file" tracks
+
+SELECT COUNT(*) FROM tracks WHERE media_type_id IN(SELECT id FROM media_types WHERE name = "Protected MPEG-4 video file") count;
+
+3) find least expensive track that in Electronica/dance
+
+SELECT * FROM tracks WHERE genre_id IN (SELECT id FROM genres WHERE name = 'Electronica/Dance') ORDER BY unit_price LIMIT 1;
+
+4) Find all artists whose name starts with A:
+
+SELECT * FROM artists WHERE name ILIKE 'a%';
+
+5) Find all playist 1 tracks
+
+SELECT * FROM tracks WHERE id IN (SELECT track_id FROM playlists_tracks WHERE playlist_id = 1)
